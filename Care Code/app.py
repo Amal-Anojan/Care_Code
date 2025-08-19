@@ -1,14 +1,4 @@
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect,
-    url_for,
-    flash,
-    session,
-    jsonify,
-    abort,
-)
+from flask import (Flask,render_template,request,redirect,url_for,flash,session,jsonify,abort,)
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -21,41 +11,8 @@ import json
 import os
 
 # Import models and forms
-from models import (
-    db,
-    Ministry,
-    Hospital,
-    HospitalAdmin,
-    Patient,
-    PatientIdentifier,
-    Doctor,
-    MedicalEncounter,
-    QRToken,
-    AuditLog,
-    PatientHospital,
-)
-from forms import (
-    LoginForm,
-    MinistryRegistrationForm,
-    HospitalForm,
-    HospitalAdminForm,
-    PatientForm,
-    PatientIdentifierForm,
-    DoctorForm,
-    MedicalEncounterForm,
-    PatientSearchForm,
-    QRTokenForm,
-    ChangePasswordForm,
-    ProfileUpdateForm,
-    MedicalRecordSearchForm,
-    json_to_contact_info,
-    json_to_address,
-    contact_info_to_form_data,
-    address_to_form_data,
-    specialties_to_form_data,
-    form_data_to_specialties,
-)
-
+from models import (db,Ministry,Hospital,HospitalAdmin,Patient,PatientIdentifier,Doctor,MedicalEncounter,QRToken,AuditLog,PatientHospital,)
+from forms import (LoginForm,MinistryRegistrationForm,HospitalForm,HospitalAdminForm,PatientForm,PatientIdentifierForm,DoctorForm,MedicalEncounterForm,PatientSearchForm,QRTokenForm,ChangePasswordForm,ProfileUpdateForm,MedicalRecordSearchForm,json_to_contact_info,json_to_address,contact_info_to_form_data,address_to_form_data,specialties_to_form_data,form_data_to_specialties,)
 
 def create_app():
     app = Flask(__name__)
@@ -1624,4 +1581,5 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
+
     app.run(debug=True)

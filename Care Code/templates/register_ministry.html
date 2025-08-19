@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Ministry Registration - CareCode{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <i class="bi bi-building" style="font-size: 3rem;"></i>
+                    <h4 class="mt-2 mb-0">Ministry Registration</h4>
+                    <small class="text-light">Register your Ministry to manage hospitals</small>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('register_ministry') }}" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), 
+                                       placeholder="e.g., Ministry of Health - Sri Lanka") }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.admin_username.label(class="form-label") }}
+                                {{ form.admin_username(class="form-control" + (" is-invalid" if form.admin_username.errors else ""), 
+                                                     placeholder="admin_username") }}
+                                {% if form.admin_username.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.admin_username.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.contact_phone.label(class="form-label") }}
+                                {{ form.contact_phone(class="form-control" + (" is-invalid" if form.contact_phone.errors else ""), 
+                                                    placeholder="+94 11 234 5678") }}
+                                {% if form.contact_phone.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.contact_phone.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.contact_email.label(class="form-label") }}
+                            {{ form.contact_email(class="form-control" + (" is-invalid" if form.contact_email.errors else ""), 
+                                                 placeholder="admin@ministry.gov.lk") }}
+                            {% if form.contact_email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.contact_email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.address.label(class="form-label") }}
+                            {{ form.address(class="form-control" + (" is-invalid" if form.address.errors else ""), 
+                                          rows="3", placeholder="Ministry office address") }}
+                            {% if form.address.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.password.label(class="form-label") }}
+                                <div class="input-group">
+                                    {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), 
+                                                   placeholder="Enter secure password", id="password") }}
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                        <i class="bi bi-eye" id="toggleIcon1"></i>
+                                    </button>
+                                </div>
+                                {% if form.password.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.confirm_password.label(class="form-label") }}
+                                <div class="input-group">
+                                    {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), 
+                                                           placeholder="Confirm password", id="confirm_password") }}
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirm_password')">
+                                        <i class="bi bi-eye" id="toggleIcon2"></i>
+                                    </button>
+                                </div>
+                                {% if form.confirm_password.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.confirm_password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Important Information:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>Ministry registration requires approval from system administrators</li>
+                                    <li>Ensure all information is accurate and official</li>
+                                    <li>Contact information will be used for official communications</li>
+                                    <li>Password must be at least 8 characters long</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I confirm that I am authorized to register this ministry and agree to the 
+                                    <a href="#" class="text-primary">Terms of Service</a> and 
+                                    <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3" style="background-color: #f8f9fa;">
+                    <small class="text-muted">
+                        Already have an account? 
+                        <a href="{{ url_for('login') }}" class="text-primary text-decoration-none fw-bold">
+                            Login here
+                        </a>
+                    </small>
+                    <br>
+                    <small class="text-muted mt-1">
+                        Need help? Contact support at 
+                        <a href="mailto:support@carecode.com" class="text-primary text-decoration-none">
+                            support@carecode.com
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .main-content {
+        background: transparent;
+        padding: 2rem 0;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-bottom: none;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .alert-info {
+        border-left: 4px solid #667eea;
+        background-color: #f0f4ff;
+        border-color: #b3d4fc;
+    }
+    
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .form-check-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .input-group .btn-outline-secondary {
+        border-color: #ced4da;
+        color: #6c757d;
+    }
+    
+    .input-group .btn-outline-secondary:hover {
+        background-color: #667eea;
+        border-color: #667eea;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .card-body {
+            padding: 2rem 1.5rem !important;
+        }
+    }
+</style>
+
+<script>
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const toggleIcon = document.getElementById(fieldId === 'password' ? 'toggleIcon1' : 'toggleIcon2');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('bi-eye');
+        toggleIcon.classList.add('bi-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('bi-eye-slash');
+        toggleIcon.classList.add('bi-eye');
+    }
+}
+
+// Form validation enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const termsCheck = document.getElementById('termsCheck');
+    const submitBtn = form.querySelector('.btn-primary');
+    
+    // Real-time validation feedback
+    const inputs = form.querySelectorAll('input[required], textarea[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.value.trim() !== '') {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+    
+    // Password matching validation
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    
+    function checkPasswordMatch() {
+        if (confirmPassword.value !== '') {
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('is-invalid');
+                confirmPassword.classList.remove('is-valid');
+            } else {
+                confirmPassword.classList.remove('is-invalid');
+                confirmPassword.classList.add('is-valid');
+            }
+        }
+    }
+    
+    password.addEventListener('input', checkPasswordMatch);
+    confirmPassword.addEventListener('input', checkPasswordMatch);
+    
+    // Terms checkbox validation
+    termsCheck.addEventListener('change', function() {
+        if (this.checked) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-secondary');
+            submitBtn.classList.add('btn-primary');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.remove('btn-primary');
+            submitBtn.classList.add('btn-secondary');
+        }
+    });
+    
+    // Initial state
+    submitBtn.disabled = !termsCheck.checked;
+    if (!termsCheck.checked) {
+        submitBtn.classList.remove('btn-primary');
+        submitBtn.classList.add('btn-secondary');
+    }
+});
+</script>
+{% endblock %}

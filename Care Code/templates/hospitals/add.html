@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Add Hospital - CareCode{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('hospitals') }}">Hospitals</a></li>
+        <li class="breadcrumb-item active">Add Hospital</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="bi bi-hospital me-2"></i>Add New Hospital
+                </h4>
+                <small class="text-light">Register a new hospital in the system</small>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_hospital') }}" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Hospital Basic Information -->
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), 
+                                       placeholder="Enter hospital name") }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.code.label(class="form-label") }}
+                            {{ form.code(class="form-control" + (" is-invalid" if form.code.errors else ""), 
+                                       placeholder="e.g., CGH001") }}
+                            {% if form.code.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.code.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>Optional unique identifier for the hospital
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Location Information -->
+                    <h5 class="mt-4 mb-3 text-primary">
+                        <i class="bi bi-geo-alt me-2"></i>Location Information
+                    </h5>
+                    
+                    <div class="mb-3">
+                        {{ form.address.label(class="form-label") }}
+                        {{ form.address(class="form-control" + (" is-invalid" if form.address.errors else ""), 
+                                      rows="2", placeholder="Enter hospital address") }}
+                        {% if form.address.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.address.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.city.label(class="form-label") }}
+                            {{ form.city(class="form-control" + (" is-invalid" if form.city.errors else ""), 
+                                       placeholder="e.g., Colombo") }}
+                            {% if form.city.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.city.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.province.label(class="form-label") }}
+                            {{ form.province(class="form-control" + (" is-invalid" if form.province.errors else ""), 
+                                           placeholder="e.g., Western") }}
+                            {% if form.province.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.province.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.postal_code.label(class="form-label") }}
+                            {{ form.postal_code(class="form-control" + (" is-invalid" if form.postal_code.errors else ""), 
+                                               placeholder="e.g., 10350") }}
+                            {% if form.postal_code.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.postal_code.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Information -->
+                    <h5 class="mt-4 mb-3 text-primary">
+                        <i class="bi bi-telephone me-2"></i>Contact Information
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.contact_phone.label(class="form-label") }}
+                            {{ form.contact_phone(class="form-control" + (" is-invalid" if form.contact_phone.errors else ""), 
+                                                 placeholder="+94 11 234 5678") }}
+                            {% if form.contact_phone.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.contact_phone.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.contact_email.label(class="form-label") }}
+                            {{ form.contact_email(class="form-control" + (" is-invalid" if form.contact_email.errors else ""), 
+                                                 placeholder="admin@hospital.lk") }}
+                            {% if form.contact_email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.contact_email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.emergency_contact.label(class="form-label") }}
+                            {{ form.emergency_contact(class="form-control" + (" is-invalid" if form.emergency_contact.errors else ""), 
+                                                    placeholder="+94 11 234 5999") }}
+                            {% if form.emergency_contact.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.emergency_contact.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <a href="{{ url_for('hospitals') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Cancel
+                        </a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form Validation Helper -->
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-8">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-lightbulb me-2"></i>Tips for Adding Hospitals
+                </h6>
+                <ul class="mb-0">
+                    <li>Hospital name should be unique and easily identifiable</li>
+                    <li>Hospital code (if provided) must be unique across the system</li>
+                    <li>Complete address information helps with patient transfers</li>
+                    <li>Emergency contact should be available 24/7</li>
+                    <li>After adding the hospital, you can add hospital administrators</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CareCode{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            {% if user_type == 'ministry' %}
+                Ministry Dashboard
+            {% elif user_type == 'hospital_admin' %}
+                Hospital Admin Dashboard
+            {% elif user_type == 'doctor' %}
+                Doctor Dashboard
+            {% endif %}
+        </h2>
+        <p class="text-muted">Welcome back, {{ current_username }}!</p>
+    </div>
+    <div>
+        <small class="text-muted">Last login: {{ moment().format('LLL') }}</small>
+    </div>
+</div>
+
+{% if user_type == 'ministry' %}
+<!-- Ministry Dashboard -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ total_hospitals }}</h4>
+                        <p class="mb-0">Hospitals</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-hospital" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('hospitals') }}" class="text-white text-decoration-none">
+                    View Details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ total_patients }}</h4>
+                        <p class="mb-0">Total Patients</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-people" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('patients') }}" class="text-white text-decoration-none">
+                    View Details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ total_doctors }}</h4>
+                        <p class="mb-0">Total Doctors</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-person-badge" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('doctors') }}" class="text-white text-decoration-none">
+                    View Details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ ministry.name|length > 15 and ministry.name[:15] + '...' or ministry.name }}</h4>
+                        <p class="mb-0">Ministry</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-building" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('reports') }}" class="text-white text-decoration-none">
+                    View Reports <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-hospital me-2"></i>Your Hospitals</h5>
+            </div>
+            <div class="card-body">
+                {% if hospitals %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Hospital Name</th>
+                                    <th>Code</th>
+                                    <th>Location</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for hospital in hospitals[:5] %}
+                                <tr>
+                                    <td>{{ hospital.name }}</td>
+                                    <td><span class="badge bg-primary">{{ hospital.code or 'N/A' }}</span></td>
+                                    <td>
+                                        {% if hospital.location %}
+                                            {{ hospital.location.get('city', 'Unknown') }}
+                                        {% else %}
+                                            Unknown
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('edit_hospital', hospital_id=hospital.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{{ url_for('hospital_admins', hospital_id=hospital.id) }}" class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-people"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if hospitals|length > 5 %}
+                        <div class="text-center">
+                            <a href="{{ url_for('hospitals') }}" class="btn btn-outline-primary">
+                                View All Hospitals
+                            </a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-hospital" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="mt-2">No hospitals registered yet.</p>
+                        <a href="{{ url_for('add_hospital') }}" class="btn btn-primary">
+                            Add First Hospital
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_hospital') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Add New Hospital
+                    </a>
+                    <a href="{{ url_for('patients') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-people me-2"></i>View All Patients
+                    </a>
+                    <a href="{{ url_for('reports') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-graph-up me-2"></i>View Reports
+                    </a>
+                    <a href="{{ url_for('audit_logs') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-shield-check me-2"></i>Audit Logs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif user_type == 'hospital_admin' %}
+<!-- Hospital Admin Dashboard -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ total_patients }}</h4>
+                        <p class="mb-0">Patients</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-people" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('patients') }}" class="text-white text-decoration-none">
+                    View Details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ total_doctors }}</h4>
+                        <p class="mb-0">Doctors</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-person-badge" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('doctors') }}" class="text-white text-decoration-none">
+                    View Details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ recent_encounters|length }}</h4>
+                        <p class="mb-0">Recent Records</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-clipboard-heart" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('medical_records') }}" class="text-white text-decoration-none">
+                    View Details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0" style="font-size: 1.2rem;">{{ hospital.name|length > 12 and hospital.name[:12] + '...' or hospital.name }}</h4>
+                        <p class="mb-0">Hospital</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-hospital" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('reports') }}" class="text-white text-decoration-none">
+                    View Reports <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Medical Encounters</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_encounters %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Date</th>
+                                    <th>Diagnosis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for encounter in recent_encounters %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('patient_detail', patient_id=encounter.patient_id) }}" class="text-decoration-none">
+                                            {{ encounter.patient.full_name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ encounter.doctor.full_name if encounter.doctor else 'Unknown' }}</td>
+                                    <td>{{ encounter.treatment_date|date }}</td>
+                                    <td>{{ encounter.diagnosis_text[:50] }}{% if encounter.diagnosis_text|length > 50 %}...{% endif %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-clipboard-heart" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="mt-2">No recent medical encounters.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_patient') }}" class="btn btn-primary">
+                        <i class="bi bi-person-plus me-2"></i>Add New Patient
+                    </a>
+                    <a href="{{ url_for('add_doctor') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-person-badge-fill me-2"></i>Add New Doctor
+                    </a>
+                    <a href="{{ url_for('medical_records') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-file-medical me-2"></i>Medical Records
+                    </a>
+                    <a href="{{ url_for('audit_logs') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-shield-check me-2"></i>Audit Logs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif user_type == 'doctor' %}
+<!-- Doctor Dashboard -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ today_encounters }}</h4>
+                        <p class="mb-0">Today's Visits</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-calendar-check" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ total_patients_treated }}</h4>
+                        <p class="mb-0">Patients Treated</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-people" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('patients') }}" class="text-white text-decoration-none">
+                    View Patients <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0">{{ recent_encounters|length }}</h4>
+                        <p class="mb-0">Recent Records</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-clipboard-heart" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('encounters') }}" class="text-white text-decoration-none">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-0" style="font-size: 1.1rem;">{{ hospital.name|length > 10 and hospital.name[:10] + '...' or hospital.name }}</h4>
+                        <p class="mb-0">Hospital</p>
+                    </div>
+                    <div>
+                        <i class="bi bi-hospital" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>My Recent Encounters</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_encounters %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Date</th>
+                                    <th>Diagnosis</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for encounter in recent_encounters %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('patient_detail', patient_id=encounter.patient_id) }}" class="text-decoration-none">
+                                            {{ encounter.patient.full_name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ encounter.treatment_date|date }}</td>
+                                    <td>{{ encounter.diagnosis_text[:40] }}{% if encounter.diagnosis_text|length > 40 %}...{% endif %}</td>
+                                    <td>
+                                        <a href="{{ url_for('edit_encounter', encounter_id=encounter.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-clipboard-heart" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="mt-2">No recent encounters recorded.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-activity me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('patients') }}" class="btn btn-primary">
+                        <i class="bi bi-search me-2"></i>Find Patient
+                    </a>
+                    <a href="{{ url_for('encounters') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-clipboard-heart me-2"></i>My Encounters
+                    </a>
+                    <a href="{{ url_for('medical_records') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-file-medical me-2"></i>Medical Records
+                    </a>
+                    <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-person me-2"></i>My Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-person-badge me-2"></i>My Information</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Name:</strong> {{ doctor.full_name }}</p>
+                <p class="mb-1"><strong>License:</strong> {{ doctor.license_no }}</p>
+                {% if doctor.specialties %}
+                    <p class="mb-0"><strong>Specialties:</strong></p>
+                    <div class="mt-1">
+                        {% for specialty in doctor.specialties %}
+                            <span class="badge bg-secondary me-1 mb-1">{{ specialty }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

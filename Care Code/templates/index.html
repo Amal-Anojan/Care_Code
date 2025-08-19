@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to CareCode - Medical Records System{% endblock %}
+
+{% block content %}
+<div class="container-fluid h-100">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center mb-5">
+                <div class="mb-4">
+                    <i class="bi bi-heart-pulse" style="font-size: 4rem; color: var(--medical-primary);"></i>
+                </div>
+                <h1 class="display-4 fw-bold text-primary mb-3">CareCode</h1>
+                <p class="lead text-muted">Comprehensive Medical Records Management System</p>
+                <p class="text-muted">Secure, efficient, and user-friendly healthcare data management for medical professionals and institutions.</p>
+            </div>
+
+            <div class="row text-center mb-5">
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <i class="bi bi-shield-check text-success mb-3" style="font-size: 2.5rem;"></i>
+                            <h5 class="card-title">Secure</h5>
+                            <p class="card-text text-muted">HIPAA compliant with role-based access control and audit trails.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <i class="bi bi-lightning text-warning mb-3" style="font-size: 2.5rem;"></i>
+                            <h5 class="card-title">Fast</h5>
+                            <p class="card-text text-muted">Quick patient lookup and instant access to medical history.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <i class="bi bi-people text-info mb-3" style="font-size: 2.5rem;"></i>
+                            <h5 class="card-title">Collaborative</h5>
+                            <p class="card-text text-muted">Seamless sharing between healthcare providers and institutions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                {% if not current_user_type %}
+                    <div class="mb-4">
+                        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        </a>
+                        <a href="{{ url_for('register_ministry') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-building me-2"></i>Register Ministry
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="mb-4">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-lg-6 d-none d-lg-block">
+            <div class="text-center">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23f8f9fa' width='400' height='300'/%3E%3Cg fill='%230d6efd' opacity='0.1'%3E%3Ccircle cx='100' cy='100' r='20'/%3E%3Ccircle cx='300' cy='80' r='15'/%3E%3Ccircle cx='200' cy='200' r='25'/%3E%3Ccircle cx='350' cy='200' r='18'/%3E%3Ccircle cx='50' cy='250' r='12'/%3E%3C/g%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%230d6efd' font-size='24' font-family='Arial'%3EMedical Records%3C/text%3E%3Ctext x='200' y='180' text-anchor='middle' fill='%236c757d' font-size='16' font-family='Arial'%3EManagement System%3C/text%3E%3C/svg%3E" 
+                     alt="Medical Records Illustration" class="img-fluid" style="max-width: 80%;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5 pt-5 border-top">
+        <div class="col-12">
+            <h3 class="text-center mb-5 text-primary">Key Features</h3>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="text-center">
+                        <i class="bi bi-person-plus text-primary mb-3" style="font-size: 2rem;"></i>
+                        <h5>Patient Management</h5>
+                        <p class="text-muted small">Complete patient registration and profile management with identification tracking.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="text-center">
+                        <i class="bi bi-clipboard-heart text-primary mb-3" style="font-size: 2rem;"></i>
+                        <h5>Medical Encounters</h5>
+                        <p class="text-muted small">Digital medical records with diagnosis, prescriptions, and treatment history.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="text-center">
+                        <i class="bi bi-qr-code text-primary mb-3" style="font-size: 2rem;"></i>
+                        <h5>QR Code Access</h5>
+                        <p class="text-muted small">Emergency access to patient information via secure QR codes.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="text-center">
+                        <i class="bi bi-graph-up text-primary mb-3" style="font-size: 2rem;"></i>
+                        <h5>Analytics & Reports</h5>
+                        <p class="text-muted small">Comprehensive reporting and analytics for healthcare insights.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .main-content {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 1rem;
+        backdrop-filter: blur(10px);
+        margin: 2rem;
+        padding: 3rem;
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+</style>
+{% endblock %}
